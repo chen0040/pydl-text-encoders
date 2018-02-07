@@ -107,8 +107,11 @@ class GloveModel(object):
         return X
 
     def encode_doc(self, doc, max_allowed_doc_length=None):
+        if max_allowed_doc_length is None:
+            max_allowed_doc_length = 500
+
         words = [w.lower() for w in nltk.word_tokenize(doc)]
-        max_len = max(len(words), max_allowed_doc_length)
+        max_len = min(len(words), max_allowed_doc_length)
         E = np.zeros(shape=(self.embedding_dim, max_len))
         X = np.zeros(shape=(self.embedding_dim, ))
         for j in range(max_len):
