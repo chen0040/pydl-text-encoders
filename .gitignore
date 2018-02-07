@@ -10,6 +10,8 @@ target/
 .idea/
 *.iml
 
+pydl_text_encoders/very_large_data
+
 # Distribution / packaging
 .Python
 env/
