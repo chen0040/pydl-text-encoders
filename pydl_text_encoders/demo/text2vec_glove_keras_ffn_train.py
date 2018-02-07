@@ -25,8 +25,6 @@ def main():
             X.append(sentence)
             Y.append(label)
 
-    # X = remove_infrequent_words(X)
-
     glove_model = GloveModel()
     glove_model.load('./very_large_data')
     X = glove_model.encode_docs(X)
