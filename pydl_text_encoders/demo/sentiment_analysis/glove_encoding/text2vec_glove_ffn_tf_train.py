@@ -26,7 +26,7 @@ def forwardprop(X, w_1, w_2):
 
 def main():
     np.random.seed(42)
-    data_dir_path = '../data'
+    data_dir_path = '../../data'
 
     Xdata = []
     Ydata = []
@@ -37,9 +37,9 @@ def main():
             Xdata.append(sentence)
             Ydata.append(int(label))
 
-    glove_model = GloveModel()
-    glove_model.load('../very_large_data')
-    Xdata = glove_model.encode_docs(Xdata)
+    encoder = GloveModel()
+    encoder.load('../../very_large_data')
+    Xdata = encoder.encode_docs(Xdata)
 
     print(Xdata.shape)
 
