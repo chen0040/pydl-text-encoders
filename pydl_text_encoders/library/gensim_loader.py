@@ -10,6 +10,7 @@ class GenSimWord2VecModel(object):
 
     def __init__(self):
         self.model = None
+        self.embedding_dim = None
 
     def fit(self, sentences, embed_dim=None, window=None, min_count=None, workers=None):
         if window is None:
@@ -26,21 +27,26 @@ class GenSimWord2VecModel(object):
 
         self.model = Word2Vec(sentence_input, size=embed_dim, window=window, min_count=min_count, workers=workers)
         self.model.init_sims(replace=True)
+        self.embedding_dim = embed_dim
 
     def load_google_news_vectors(self, data_dir_path):
         word2vec_model = data_dir_path + '/GoogleNews-vectors-negative300.bin.gz'
         if not os.path.exists(word2vec_model):
             print('word2vec_model file not found locally, downloading from internet')
+            # the google news vectors is not included in the github due to file size, but can
+            # be downloaded from https://github.com/mmihaltz/word2vec-GoogleNews-vectors
             url_link = 'https://www.dropbox.com/s/i6vkmpr8ge4dce2/GoogleNews-vectors-negative300.bin.gz?dl=1'
             urllib.request.urlretrieve(url=url_link, filename=word2vec_model,
                                        reporthook=reporthook)
         self.model = KeyedVectors.load_word2vec_format(word2vec_model, binary=True)
+        self.embedding_dim = 300
 
     def save_model(self, to_file):
         self.model.save(to_file)
 
     def load_model(self, from_file):
         self.model = Word2Vec.load(from_file)
+        self.embedding_dim = self.model.wv.vector_size
 
     def encode_word(self, word):
         result = np.zeros(shape=(self.size(), ))
@@ -51,7 +57,7 @@ class GenSimWord2VecModel(object):
         return result
 
     def size(self):
-        return self.model.wv.vector_size
+        return self.embedding_dim
 
     def encode_docs(self, docs, max_allowed_doc_length=None):
         doc_count = len(docs)
