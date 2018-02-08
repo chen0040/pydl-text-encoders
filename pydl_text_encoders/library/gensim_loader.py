@@ -1,6 +1,7 @@
 from gensim.models import Word2Vec
 import numpy as np
 
+
 class GenSimWord2VecModel(object):
 
     def __init__(self):
@@ -13,11 +14,13 @@ class GenSimWord2VecModel(object):
             min_count = 5
         if workers is None:
             workers = 4
+        if embed_dim is None:
+            embed_dim = 100
         sentence_input = []
         for sentence in sentences:
             sentence_input.append(sentence.strip().split(' '))
 
-        self.model = Word2Vec(sentence_input, size=100, window=5, min_count=5, workers=4)
+        self.model = Word2Vec(sentence_input, size=embed_dim, window=window, min_count=min_count, workers=workers)
         self.model.init_sims(replace=True)
 
     def save_model(self, to_file):
@@ -27,11 +30,19 @@ class GenSimWord2VecModel(object):
         self.model = Word2Vec.load(from_file)
 
     def encode_word(self, word):
-        return self.model[word]
+        result = np.zeros(shape=(self.size(), ))
+        try:
+            result = self.model[word]
+        except KeyError:
+            pass
+        return result
+
+    def size(self):
+        return self.model.wv.vector_size
 
     def encode_docs(self, docs, max_allowed_doc_length=None):
         doc_count = len(docs)
-        embedding_dim = self.model.
+        embedding_dim = self.size()
         X = np.zeros(shape=(doc_count, embedding_dim))
         max_len = 0
         for doc in docs:
@@ -42,11 +53,11 @@ class GenSimWord2VecModel(object):
             doc = docs[i]
             words = [w.lower() for w in doc.split(' ')]
             length = min(max_len, len(words))
-            E = np.zeros(shape=(self.embedding_dim, max_len))
+            E = np.zeros(shape=(embedding_dim, max_len))
             for j in range(length):
                 word = words[j]
                 try:
-                    E[:, j] = self.word2em[word]
+                    E[:, j] = self.model[word]
                 except KeyError:
                     pass
             X[i, :] = np.sum(E, axis=1)
@@ -56,16 +67,16 @@ class GenSimWord2VecModel(object):
     def encode_doc(self, doc, max_allowed_doc_length=None):
         words = [w.lower() for w in doc.split(' ')]
         max_len = len(words)
+        embedding_dim = self.size()
         if max_allowed_doc_length is not None:
             max_len = min(len(words), max_allowed_doc_length)
-        E = np.zeros(shape=(self.embedding_dim, max_len))
-        X = np.zeros(shape=(self.embedding_dim, ))
+        E = np.zeros(shape=(embedding_dim, max_len))
+        X = np.zeros(shape=(embedding_dim,))
         for j in range(max_len):
             word = words[j]
             try:
-                E[:, j] = self.word2em[word]
+                E[:, j] = self.model[word]
             except KeyError:
                 pass
         X[:] = np.sum(E, axis=1)
         return X
-

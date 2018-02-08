@@ -7,7 +7,7 @@ from pydl_text_encoders.library.plot_utils import plot_confusion_matrix, most_in
 
 
 def main():
-    data_dir_path = './data'
+    data_dir_path = '../data'
 
     # Import `umich-sentiment-train.txt`
     df = pd.read_csv(data_dir_path + "/umich-sentiment-train.txt", sep='\t', header=None, usecols=[0, 1])

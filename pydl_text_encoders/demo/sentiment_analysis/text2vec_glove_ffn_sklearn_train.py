@@ -8,7 +8,7 @@ from pydl_text_encoders.library.plot_utils import plot_confusion_matrix
 
 
 def main():
-    data_dir_path = './data'
+    data_dir_path = '../data'
 
     # Import `umich-sentiment-train.txt`
     df = pd.read_csv(data_dir_path + "/umich-sentiment-train.txt", sep='\t', header=None, usecols=[0, 1],
@@ -20,7 +20,7 @@ def main():
     X = df[1].as_matrix()
 
     glove_model = GloveModel()
-    glove_model.load('./very_large_data')
+    glove_model.load('../very_large_data')
     X = glove_model.encode_docs(X)
 
     # Make training and test sets
