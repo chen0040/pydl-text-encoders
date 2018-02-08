@@ -3,7 +3,6 @@ import os
 import zipfile
 import sys
 import numpy as np
-import nltk
 
 
 def reporthook(block_num, block_size, total_size):
@@ -88,12 +87,12 @@ class GloveModel(object):
         X = np.zeros(shape=(doc_count, self.embedding_dim))
         max_len = 0
         for doc in docs:
-            max_len = max(max_len, len([w for w in nltk.word_tokenize(doc)]))
+            max_len = max(max_len, len(doc.split(' ')))
         if max_allowed_doc_length is not None:
             max_len = min(max_len, max_allowed_doc_length)
         for i in range(0, doc_count):
             doc = docs[i]
-            words = [w.lower() for w in nltk.word_tokenize(doc)]
+            words = [w.lower() for w in doc.split(' ')]
             length = min(max_len, len(words))
             E = np.zeros(shape=(self.embedding_dim, max_len))
             for j in range(length):
@@ -107,7 +106,7 @@ class GloveModel(object):
         return X
 
     def encode_doc(self, doc, max_allowed_doc_length=None):
-        words = [w.lower() for w in nltk.word_tokenize(doc)]
+        words = [w.lower() for w in doc.split(' ')]
         max_len = len(words)
         if max_allowed_doc_length is not None:
             max_len = min(len(words), max_allowed_doc_length)

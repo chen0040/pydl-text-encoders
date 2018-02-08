@@ -1,12 +1,9 @@
 from keras import Sequential
 from keras.layers import Dense, Dropout
 from sklearn.model_selection import train_test_split
-import pandas as pd
-from keras.utils import np_utils
 import numpy as np
 
 from pydl_text_encoders.library.glove_loader import GloveModel
-from pydl_text_encoders.library.text_utils import remove_infrequent_words
 
 BATCH_SIZE = 64
 NUM_EPOCHS = 20
@@ -31,7 +28,7 @@ def main():
 
     print(X.shape)
 
-    Y = np_utils.to_categorical(Y, 2)
+    Y = [[1-y, y] for y in Y]
 
     # Make training and test sets
     Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, test_size=0.2, random_state=42)
