@@ -14,6 +14,7 @@ def main():
 
     gs = GenSimWord2VecModel()
     gs.fit(sentences)
+    # gs.load_google_news_vectors('./very_large_data')
 
     print('current encoding is: ', gs.size())
     print(gs.encode_word('文'))

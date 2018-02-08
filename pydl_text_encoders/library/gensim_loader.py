@@ -1,5 +1,9 @@
-from gensim.models import Word2Vec
+from gensim.models import Word2Vec, KeyedVectors
 import numpy as np
+import os
+import urllib.request
+
+from pydl_text_encoders.library.download_utils import reporthook
 
 
 class GenSimWord2VecModel(object):
@@ -22,6 +26,15 @@ class GenSimWord2VecModel(object):
 
         self.model = Word2Vec(sentence_input, size=embed_dim, window=window, min_count=min_count, workers=workers)
         self.model.init_sims(replace=True)
+
+    def load_google_news_vectors(self, data_dir_path):
+        word2vec_model = data_dir_path + '/GoogleNews-vectors-negative300.bin.gz'
+        if not os.path.exists(word2vec_model):
+            print('word2vec_model file not found locally, downloading from internet')
+            url_link = 'https://www.dropbox.com/s/i6vkmpr8ge4dce2/GoogleNews-vectors-negative300.bin.gz?dl=1'
+            urllib.request.urlretrieve(url=url_link, filename=word2vec_model,
+                                       reporthook=reporthook)
+        self.model = KeyedVectors.load_word2vec_format(word2vec_model, binary=True)
 
     def save_model(self, to_file):
         self.model.save(to_file)
