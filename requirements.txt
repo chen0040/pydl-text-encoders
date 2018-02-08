@@ -1,7 +1,7 @@
 tensorflow
-pytorch
 numpy
 scipy
 scikit-learn
 pandas
 matplotlib
+gensim
