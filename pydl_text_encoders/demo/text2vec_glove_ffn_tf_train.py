@@ -19,7 +19,7 @@ def forwardprop(X, w_1, w_2):
     Forward-propagation.
     IMPORTANT: yhat is not softmax since TensorFlow's softmax_cross_entropy_with_logits() does that internally.
     """
-    h = tf.nn.sigmoid(tf.matmul(X, w_1))  # The \sigma function
+    h = tf.nn.relu(tf.matmul(X, w_1))  # The \sigma function
     yhat = tf.matmul(h, w_2)  # The \varphi function
     return yhat
 
