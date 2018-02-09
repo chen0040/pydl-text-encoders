@@ -3,7 +3,7 @@ from pydl_text_encoders.library.gensim_loader import GenSimWord2VecModel
 
 
 def main():
-    data_dir_path = './data'
+    data_dir_path = '../data'
 
     sentences = []
     # Import `umich-sentiment-train.txt`
@@ -21,7 +21,7 @@ def main():
     print(gs.encode_word('text'))
 
     data_set = SentimentTrainDataSet()
-    data_set.load_umich('./data/umich-sentiment-train.txt')
+    data_set.load_umich('../data/umich-sentiment-train.txt')
 
     docs = data_set.get_docs()
 
