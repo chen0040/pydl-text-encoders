@@ -2,13 +2,14 @@ from sklearn import metrics
 from sklearn.model_selection import train_test_split
 import pandas as pd
 from sklearn.neural_network import MLPClassifier
-
-from pydl_text_encoders.library.glove_loader import GloveModel
-from pydl_text_encoders.library.plot_utils import plot_confusion_matrix
+import os
+import sys
 
 
 def main():
-    data_dir_path = '../../data'
+    current_dir = os.path.dirname(__file__)
+    current_dir = current_dir if current_dir is not '' else '.'
+    data_dir_path = current_dir + '/../../data'
 
     # Import `umich-sentiment-train.txt`
     df = pd.read_csv(data_dir_path + "/umich-sentiment-train.txt", sep='\t', header=None, usecols=[0, 1],
@@ -19,8 +20,13 @@ def main():
     Y = df[0].as_matrix()
     X = df[1].as_matrix()
 
+    # add the pydl_text_encoders module to the system path
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+    from pydl_text_encoders.library.glove_loader import GloveModel
+    from pydl_text_encoders.library.plot_utils import plot_confusion_matrix
+
     encoder = GloveModel()
-    encoder.load('../../very_large_data')
+    encoder.load(current_dir + '/../../very_large_data')
     X = encoder.encode_docs(X)
 
     # Make training and test sets

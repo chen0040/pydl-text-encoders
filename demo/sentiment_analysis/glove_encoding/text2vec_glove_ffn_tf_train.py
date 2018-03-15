@@ -1,8 +1,8 @@
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 import numpy as np
-
-from pydl_text_encoders.library.glove_loader import GloveModel
+import os
+import sys
 
 BATCH_SIZE = 16
 NUM_EPOCHS = 20
@@ -26,7 +26,11 @@ def forwardprop(X, w_1, w_2):
 
 def main():
     np.random.seed(42)
-    data_dir_path = '../../data'
+    current_dir = os.path.dirname(__file__)
+    current_dir = current_dir if current_dir is not '' else '.'
+    # add the pydl_text_encoders module to the system path
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+    data_dir_path = current_dir + '/../../data'
 
     Xdata = []
     Ydata = []
@@ -37,8 +41,9 @@ def main():
             Xdata.append(sentence)
             Ydata.append(int(label))
 
+    from pydl_text_encoders.library.glove_loader import GloveModel
     encoder = GloveModel()
-    encoder.load('../../very_large_data')
+    encoder.load(current_dir + '/../../very_large_data')
     Xdata = encoder.encode_docs(Xdata)
 
     print(Xdata.shape)
